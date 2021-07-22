@@ -43,6 +43,7 @@ def fix_files(files: Tuple[TextIOWrapper]) -> Optional[str]:
         if output == "file":
             file_wrapper.seek(0)
             file_wrapper.write(fixed_source)
+            file_wrapper.write('\n')
             file_wrapper.truncate()
         else:
             return fixed_source
