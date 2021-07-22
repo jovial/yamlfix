@@ -74,6 +74,7 @@ def fix_code(source_code: str) -> str:
         _restore_truthy_strings,
         _restore_double_exclamations,
         _fix_top_level_lists,
+        _fix_kayobe_workaround,
     ]
     for fixer in fixers:
         source_code = fixer(source_code)
@@ -256,6 +257,17 @@ def _fix_comments(source_code: str) -> str:
     for line in source_code.splitlines():
         if re.match(r".+\S\s#", line):
             line = line.replace(" #", "  #")
+        fixed_source_lines.append(line)
+
+    return "\n".join(fixed_source_lines)
+
+
+def _fix_kayobe_workaround(source_code: str) -> str:
+    # This matches the upstream style
+    fixed_source_lines = []
+    for line in source_code.splitlines():
+        if re.match(r"^workaround_ansible_issue_8743:", line):
+            line = "workaround_ansible_issue_8743: yes"
         fixed_source_lines.append(line)
 
     return "\n".join(fixed_source_lines)
